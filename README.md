@@ -76,9 +76,11 @@ The key reason we decided in applying a manual tuning parameter is that it wasn'
 For the CTE model, our intuition was that the P control would move the car towards the middle of the lane. A higher Kp would move the car towards centre faster. This indeed agrees with our observation, as can be seen in the comparison between (4) and (6).
 
 Kp = 0.03
+
 ![alt text][image1] 
 
 Kp = 0.09
+
 ![alt text][image2]
 
 Where the car with lower Kp tends to be closer to the right side of the lane during a left curve, indicating that there's insufficient correction steering.
@@ -91,9 +93,11 @@ d_error = difference in CTE between t and t-1
 This can be interpreted as a term that corrects for overshooting from the impact of Kp. Comparing between (9) and (10), it's clear that Kd has the effect of stabilizing the car once it reaches the middle of the lane due to Kp correction.
 
 Kd = 0
+
 ![alt text][image3]
 
 Kd = 5
+
 ![alt text][image4]
 
 #### Throttle Control Model
