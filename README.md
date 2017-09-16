@@ -18,9 +18,7 @@ The PID controls used here takes a target input and calculates a response such t
 
 ### 1 Steering Angle
 
-Input : Cross-track-error
-Output: Steering angle
-PID   : Proportional, Integrative, and Differential
+Input - Cross-track-error, Output - Steering angle
 
 ```
 void PID::UpdateError(double cte) {
@@ -33,9 +31,7 @@ void PID::UpdateError(double cte) {
 
 ### 2 Throttle Control
 
-Input : Difference between current speed and target speed
-Output: Throttle
-PID   : Proportional, and Differential
+Input - Difference between current speed and target speed, Output - Throttle
 
 ```
 double ThrottleControl::GetResponse() const {
@@ -71,7 +67,7 @@ As the simulator has no systematic bias, we used a Ki = 0 for both the Cross-Tra
 
 For both PID systems, we decided to use a manual tuning process. Incrementally changing one parameter in either direction at a time. We used total accumulated CTE as our error measure in comparing the parameter's effectiveness in steering our vehicle.
 
-The key reason we decided in applying a manual tuning parameter is that the it wasn't straightforward for us to apply automated parameter optimization (such as twiddle) since running the simulator iteratively was unwiedly. Besides, manual tuning provided us insight on how the vehicle steering smoothness change. This led us to draw the following observations,
+The key reason we decided in applying a manual tuning parameter is that it wasn't straightforward for us to apply automated parameter optimization (such as twiddle) since running the simulator iteratively was unwiedly. Besides, manual tuning provided us insight on how the vehicle steering smoothness change.
 
 ### PID Parameter Effect
 
@@ -79,10 +75,11 @@ The key reason we decided in applying a manual tuning parameter is that the it w
 
 For the CTE model, our intuition was that the P control would move the car towards the middle of the lane. A higher Kp would move the car towards centre faster. This indeed agrees with our observation, as can be seen in the comparison between (4) and (6).
 
-Left image : Kp = 0.03
-Right image : Kp = 0.09
+Kp = 0.03
+![alt text][image1] 
 
-![alt text][image1] ![alt text][image2]
+Kp = 0.09
+![alt text][image2]
 
 Where the car with lower Kp tends to be closer to the right side of the lane during a left curve, indicating that there's insufficient correction steering.
 
@@ -91,12 +88,13 @@ Next, we investigate the effect of Kd, given that `d_error` in our model is defi
 ```
 d_error = difference in CTE between t and t-1
 ``` 
-This can be interpreted as a term that corrects for overshooting from the impact of Kp. Comparing between (9) and (10), it's clear that Kd stabilizes the car once it reaches the middle of the lane due to Kp correction.
+This can be interpreted as a term that corrects for overshooting from the impact of Kp. Comparing between (9) and (10), it's clear that Kd has the effect of stabilizing the car once it reaches the middle of the lane due to Kp correction.
 
-Left image : Kd = 0
-Right image : Kd = 5
+Kd = 0
+![alt text][image3]
 
-![alt text][image3] ![alt text][image4]
+Kd = 5
+![alt text][image4]
 
 #### Throttle Control Model
 
@@ -106,13 +104,13 @@ This throttle control is crucial because if we apply a constant throttle, then t
 
 The final parameter used is model (14),
 
-| CTE  |          |
+| CTE  |   Value  |
 |:----:|:--------:|
 | Kp   |    0.15  |
 | Ki   | Not used |
 | Kd   |    2     |
 
-| TC   |          |
+| TC   |  Value   |
 |:----:|:--------:|
 |   Kp |    0.2   |
 |   Ki | Not used |
