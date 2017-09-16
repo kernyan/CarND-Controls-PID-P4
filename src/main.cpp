@@ -34,19 +34,20 @@ int main(int argc, char *argv[])
 
   PID pid;
   
-  double pid_kp = 0.12;
-  double pid_ki = 0; // no systematic bias in simulator
-  double pid_kd = 1.1;
+  double pid_kp = 0.15;
+  double pid_ki = 0.0; // no systematic bias in simulator
+  double pid_kd = 2.0;
 
-  //pid.Init(pid_kp, pid_ki, pid_kd);
-  pid.Init(atof(argv[1]),atof(argv[2]),atof(argv[3]));
+  pid.Init(pid_kp, pid_ki, pid_kd);
+  //pid.Init(atof(argv[1]),atof(argv[2]),atof(argv[3])); // DEBUGGING use
 
   ThrottleControl tc;
 
   double tc_kp = 0.2;
-  double tc_kd = 1;
-  //tc.Init(tc_kp, tc_kd);
-  tc.Init(atof(argv[4]),atof(argv[5]));
+  double tc_kd = 0.0;
+
+  tc.Init(tc_kp, tc_kd);
+  //tc.Init(atof(argv[4]),atof(argv[5])); // DEBUGGING use
 
   h.onMessage([&pid, &tc](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
@@ -64,6 +65,7 @@ int main(int argc, char *argv[])
           double speed = std::stod(j[1]["speed"].get<std::string>());
           //double angle = std::stod(j[1]["steering_angle"].get<std::string>());
 
+          /*
           static double AccumError = 0;
           static int TimeStep = 0;
 
@@ -72,6 +74,7 @@ int main(int argc, char *argv[])
 
           if (TimeStep % 100 == 0)
           cout << "TimeStep: " << TimeStep << "Accum Error: " << AccumError << endl;
+		  */
 
           pid.UpdateError(cte);
           double steer_value = pid.GetResponse();
@@ -85,7 +88,7 @@ int main(int argc, char *argv[])
           msgJson["throttle"] = throttle;
           auto TotalError = std::to_string(pid.TotalError());
           auto msg = "42[\"steer\"," + msgJson.dump() + " Total error:" + TotalError + "]";
-          //std::cout << msg << std::endl;
+          std::cout << msg << std::endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
         }
       } else {
